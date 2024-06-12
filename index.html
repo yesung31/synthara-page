@@ -1,13 +1,4 @@
-<form 
-  method="POST" 
-  action="https://script.google.com/macros/s/AKfycbxquW_u1JGRKYK7oLKT3Eck37RMoT7Eb8V4TPiCh7j2zRdplFiBlAshVvG8KGCqvxCq/exec"
->
-  <input name="Email" type="email" placeholder="Email" required>
-  <input name="Name" type="text" placeholder="Name" required>
-  <button type="submit">Send</button>
-</form>
-
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -49,7 +40,7 @@
     </style>
 </head>
 <body>
-    <h1>Personality Comparison Tool v0.1.2</h1>
+    <h1>Personality Comparison Tool v0.1.3</h1>
     <table class="traits-table" border="1">
         <thead>
             <tr>
@@ -59,7 +50,7 @@
             </tr>
         </thead>
         <tbody id="traits-table-body">
-        //    Traits will be inserted here by JavaScript
+            <!-- Traits will be inserted here by JavaScript -->
         </tbody>
     </table>
     <div class="buttons">
@@ -95,27 +86,13 @@
         }
 
         function submitChoice(choice) {
-            const spreadsheetId = '1I0gZAQoHW9V0bINvNRbBXvbC4KnLmhKywNJfnqbXTN0';
-            const apiKey = 'AIzaSyB2iXrQ0GKNLVUR_vrj_8kUG2QCJOPUOcI';
-            const sheetName = 'Personality Match';
+            const personality1 = JSON.parse(localStorage.getItem('personality1'));
+            const personality2 = JSON.parse(localStorage.getItem('personality2'));
+            const timestamp = new Date().toISOString();
 
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A1:L1:append?valueInputOption=RAW&key=${apiKey}`;
+            const url = `https://script.google.com/macros/s/AKfycbyUg0I0VGOTUA9hjYKYL1yqXwQGiaNEDAJBy0TWsHuXL_JfMs6x0GICuj-Ad3V2ig0G/exec?timestamp=${encodeURIComponent(timestamp)}&choice=${encodeURIComponent(choice)}&personality1=${encodeURIComponent(JSON.stringify(personality1))}&personality2=${encodeURIComponent(JSON.stringify(personality2))}`;
 
-            const data = {
-                range: '${sheetName}!A1:L1',
-                majorDimension: 'ROWS',
-                values: [
-                    [new Date().toISOString(), choice, 'Data3', 'Data4']
-                ]
-            };
-
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
+            fetch(url)
             .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
@@ -132,33 +109,6 @@
             localStorage.setItem('personality2', JSON.stringify(newPersonality2));
             updateTraitsTable(newPersonality1, newPersonality2);
         }
-
-        // function submitChoice(choice) {
-        //     const personality1 = JSON.parse(localStorage.getItem('personality1'));
-        //     const personality2 = JSON.parse(localStorage.getItem('personality2'));
-
-        //     fetch('https://script.google.com/macros/s/AKfycbyUg0I0VGOTUA9hjYKYL1yqXwQGiaNEDAJBy0TWsHuXL_JfMs6x0GICuj-Ad3V2ig0G/exec', {
-        //         method: 'POST',
-        //         mode: 'cors',
-        //         body: JSON.stringify({
-        //             timestamp: new Date().toISOString(),
-        //             choice: choice,
-        //             personality1: personality1,
-        //             personality2: personality2
-        //         }),
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         }
-        //     }).then(response => response.json())
-        //       .then(data => console.log(data))
-        //       .catch(error => console.error('Error:', error));
-
-        //     const newPersonality1 = generatePersonality();
-        //     const newPersonality2 = generatePersonality();
-        //     localStorage.setItem('personality1', JSON.stringify(newPersonality1));
-        //     localStorage.setItem('personality2', JSON.stringify(newPersonality2));
-        //     updateTraitsTable(newPersonality1, newPersonality2);
-        // }
 
         window.onload = () => {
             const personality1 = generatePersonality();
@@ -179,4 +129,4 @@
         });
     </script>
 </body>
-</html> -->
+</html>
