@@ -90,7 +90,7 @@
             const apiKey = 'AIzaSyB2iXrQ0GKNLVUR_vrj_8kUG2QCJOPUOcI';
             const sheetName = 'Personality Match';
 
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A1:L1:append?valueInputOption=RAW&key=${apiKey}`;
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A1:L1:append?valueInputOption=RAW&key=${apiKey}`;
 
             const data = {
                 range: '${sheetName}!A1:L1',
