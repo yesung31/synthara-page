@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Personality Comparison Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .traits-table {
+            margin: auto;
+        }
+        .traits-table th, .traits-table td {
+            padding: 10px;
+            text-align: center;
+        }
+        .green {
+            color: green;
+        }
+        .red {
+            color: red;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Personality Comparison Tool</h1>
+    <table class="traits-table" border="1">
+        <thead>
+            <tr>
+                <th>Trait</th>
+                <th>Personality A</th>
+                <th>Personality B</th>
+            </tr>
+        </thead>
+        <tbody id="traits-table-body">
+            <!-- Traits will be inserted here by JavaScript -->
+        </tbody>
+    </table>
+    <div class="buttons">
+        <button onclick="submitChoice('Good')">Good (G)</button>
+        <button onclick="submitChoice('Bad')">Bad (B)</button>
+        <button onclick="submitChoice('Neutral')">Neutral (N)</button>
+    </div>
+    <script>
+        const TRAITS = ["정서안정성", "관계외향성", "지식탐구성", "대인우호성", "조직성실성"];
+
+        function generatePersonality() {
+            return TRAITS.map(() => Math.floor(Math.random() * 101));
+        }
+
+        function updateTraitsTable(personality1, personality2) {
+            const tbody = document.getElementById('traits-table-body');
+            tbody.innerHTML = '';
+            TRAITS.forEach((trait, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${trait}</td>
+                    <td class="${personality1[index] > 50 ? 'green' : 'red'}">${personality1[index]}</td>
+                    <td class="${personality2[index] > 50 ? 'green' : 'red'}">${personality2[index]}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function submitChoice(choice) {
+            const personality1 = JSON.parse(localStorage.getItem('personality1'));
+            const personality2 = JSON.parse(localStorage.getItem('personality2'));
+
+            fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
+                method: 'POST',
+                body: JSON.stringify({
+                    timestamp: new Date().toISOString(),
+                    choice: choice,
+                    personality1: personality1,
+                    personality2: personality2
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.json())
+              .then(data => console.log(data))
+              .catch(error => console.error('Error:', error));
+
+            const newPersonality1 = generatePersonality();
+            const newPersonality2 = generatePersonality();
+            localStorage.setItem('personality1', JSON.stringify(newPersonality1));
+            localStorage.setItem('personality2', JSON.stringify(newPersonality2));
+            updateTraitsTable(newPersonality1, newPersonality2);
+        }
+
+        window.onload = () => {
+            const personality1 = generatePersonality();
+            const personality2 = generatePersonality();
+            localStorage.setItem('personality1', JSON.stringify(personality1));
+            localStorage.setItem('personality2', JSON.stringify(personality2));
+            updateTraitsTable(personality1, personality2);
+        }
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'g' || event.key === 'G') {
+                submitChoice('Good');
+            } else if (event.key === 'b' || event.key === 'B') {
+                submitChoice('Bad');
+            } else if (event.key === 'n' || event.key === 'N') {
+                submitChoice('Neutral');
+            }
+        });
+    </script>
+</body>
+</html>
