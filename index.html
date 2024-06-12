@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Personality Comparison Tool v0.1.0</title>
+    <title>Personality Comparison Tool</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
@@ -40,7 +40,7 @@
     </style>
 </head>
 <body>
-    <h1>Personality Comparison Tool</h1>
+    <h1>Personality Comparison Tool v0.1.0</h1>
     <table class="traits-table" border="1">
         <thead>
             <tr>
@@ -86,31 +86,63 @@
         }
 
         function submitChoice(choice) {
-            const personality1 = JSON.parse(localStorage.getItem('personality1'));
-            const personality2 = JSON.parse(localStorage.getItem('personality2'));
+            const spreadsheetId = '1I0gZAQoHW9V0bINvNRbBXvbC4KnLmhKywNJfnqbXTN0';
+            const apiKey = 'AIzaSyB2iXrQ0GKNLVUR_vrj_8kUG2QCJOPUOcI';
 
-            fetch('https://script.google.com/macros/s/AKfycbyUg0I0VGOTUA9hjYKYL1yqXwQGiaNEDAJBy0TWsHuXL_JfMs6x0GICuj-Ad3V2ig0G/exec', {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A1:L1:append?valueInputOption=RAW&key=${apiKey}`;
+
+            const data = {
+                range: 'Sheet1!A1:L1',
+                majorDimension: 'ROWS',
+                values: [
+                    [new Date().toISOString(), choice, 'Data3', 'Data4']
+                ]
+            };
+
+            fetch(url, {
                 method: 'POST',
-                mode: 'cors',
-                body: JSON.stringify({
-                    timestamp: new Date().toISOString(),
-                    choice: choice,
-                    personality1: personality1,
-                    personality2: personality2
-                }),
                 headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => response.json())
-              .then(data => console.log(data))
-              .catch(error => console.error('Error:', error));
-
-            const newPersonality1 = generatePersonality();
-            const newPersonality2 = generatePersonality();
-            localStorage.setItem('personality1', JSON.stringify(newPersonality1));
-            localStorage.setItem('personality2', JSON.stringify(newPersonality2));
-            updateTraitsTable(newPersonality1, newPersonality2);
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Google Sheet updated successfully!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Failed to update Google Sheet.');
+            });
         }
+
+        // function submitChoice(choice) {
+        //     const personality1 = JSON.parse(localStorage.getItem('personality1'));
+        //     const personality2 = JSON.parse(localStorage.getItem('personality2'));
+
+        //     fetch('https://script.google.com/macros/s/AKfycbyUg0I0VGOTUA9hjYKYL1yqXwQGiaNEDAJBy0TWsHuXL_JfMs6x0GICuj-Ad3V2ig0G/exec', {
+        //         method: 'POST',
+        //         mode: 'cors',
+        //         body: JSON.stringify({
+        //             timestamp: new Date().toISOString(),
+        //             choice: choice,
+        //             personality1: personality1,
+        //             personality2: personality2
+        //         }),
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         }
+        //     }).then(response => response.json())
+        //       .then(data => console.log(data))
+        //       .catch(error => console.error('Error:', error));
+
+        //     const newPersonality1 = generatePersonality();
+        //     const newPersonality2 = generatePersonality();
+        //     localStorage.setItem('personality1', JSON.stringify(newPersonality1));
+        //     localStorage.setItem('personality2', JSON.stringify(newPersonality2));
+        //     updateTraitsTable(newPersonality1, newPersonality2);
+        // }
 
         window.onload = () => {
             const personality1 = generatePersonality();
