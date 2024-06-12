@@ -40,7 +40,7 @@
     </style>
 </head>
 <body>
-    <h1>Personality Comparison Tool v0.1.3</h1>
+    <h1>Personality Comparison Tool v0.1.4</h1>
     <table class="traits-table" border="1">
         <thead>
             <tr>
@@ -90,7 +90,7 @@
             const personality2 = JSON.parse(localStorage.getItem('personality2'));
             const timestamp = new Date().toISOString();
 
-            const url = `https://script.google.com/macros/s/AKfycbyUg0I0VGOTUA9hjYKYL1yqXwQGiaNEDAJBy0TWsHuXL_JfMs6x0GICuj-Ad3V2ig0G/exec?timestamp=${encodeURIComponent(timestamp)}&choice=${encodeURIComponent(choice)}&personality1=${encodeURIComponent(JSON.stringify(personality1))}&personality2=${encodeURIComponent(JSON.stringify(personality2))}`;
+            const url = `https://script.google.com/macros/s/AKfycbxquW_u1JGRKYK7oLKT3Eck37RMoT7Eb8V4TPiCh7j2zRdplFiBlAshVvG8KGCqvxCq/exec?timestamp=${encodeURIComponent(timestamp)}&choice=${encodeURIComponent(choice)}&personality1=${encodeURIComponent(JSON.stringify(personality1))}&personality2=${encodeURIComponent(JSON.stringify(personality2))}`;
 
             fetch(url)
             .then(response => response.json())
