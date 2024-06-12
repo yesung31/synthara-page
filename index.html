@@ -116,6 +116,12 @@
                 console.error('Error:', error);
                 // alert('Failed to update Google Sheet.');
             });
+
+            const newPersonality1 = generatePersonality();
+            const newPersonality2 = generatePersonality();
+            localStorage.setItem('personality1', JSON.stringify(newPersonality1));
+            localStorage.setItem('personality2', JSON.stringify(newPersonality2));
+            updateTraitsTable(newPersonality1, newPersonality2);
         }
 
         // function submitChoice(choice) {
