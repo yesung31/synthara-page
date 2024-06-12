@@ -91,6 +91,7 @@
 
             fetch('https://script.google.com/macros/s/AKfycbyUg0I0VGOTUA9hjYKYL1yqXwQGiaNEDAJBy0TWsHuXL_JfMs6x0GICuj-Ad3V2ig0G/exec', {
                 method: 'POST',
+                mode: 'cors',
                 body: JSON.stringify({
                     timestamp: new Date().toISOString(),
                     choice: choice,
