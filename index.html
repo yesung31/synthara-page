@@ -86,30 +86,46 @@
         }
 
         function submitChoice(choice) {
-            const personality1 = JSON.parse(localStorage.getItem('personality1'));
-            const personality2 = JSON.parse(localStorage.getItem('personality2'));
+    const personality1 = JSON.parse(localStorage.getItem('personality1'));
+    const personality2 = JSON.parse(localStorage.getItem('personality2'));
 
-            fetch('https://script.google.com/macros/s/AKfycbyUg0I0VGOTUA9hjYKYL1yqXwQGiaNEDAJBy0TWsHuXL_JfMs6x0GICuj-Ad3V2ig0G/exec', {
-                method: 'POST',
-                body: JSON.stringify({
-                    timestamp: new Date().toISOString(),
-                    choice: choice,
-                    personality1: personality1,
-                    personality2: personality2
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => response.json())
-              .then(data => console.log(data))
-              .catch(error => console.error('Error:', error));
+    const requestOptions = {
+        method: 'OPTIONS',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
 
-            const newPersonality1 = generatePersonality();
-            const newPersonality2 = generatePersonality();
-            localStorage.setItem('personality1', JSON.stringify(newPersonality1));
-            localStorage.setItem('personality2', JSON.stringify(newPersonality2));
-            updateTraitsTable(newPersonality1, newPersonality2);
-        }
+    fetch('https://script.google.com/macros/s/AKfycbyUg0I0VGOTUA9hjYKYL1yqXwQGiaNEDAJBy0TWsHuXL_JfMs6x0GICuj-Ad3V2ig0G/exec', requestOptions)
+        .then(response => {
+            if (response.ok) {
+                return fetch('https://script.google.com/macros/s/AKfycbyUg0I0VGOTUA9hjYKYL1yqXwQGiaNEDAJBy0TWsHuXL_JfMs6x0GICuj-Ad3V2ig0G/exec', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        timestamp: new Date().toISOString(),
+                        choice: choice,
+                        personality1: personality1,
+                        personality2: personality2
+                    })
+                });
+            } else {
+                throw new Error('Failed to fetch');
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Data sent successfully');
+            } else {
+                throw new Error('Failed to send data');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+
+    // Update personality data and traits table here
+}
 
         window.onload = () => {
             const personality1 = generatePersonality();
